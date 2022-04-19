@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    {{ template "header" }}
+    <body>
+        <h1>bpr sign up!</h1>
+        <p>bpr is a platform where you can post messages on a timeline and follow what others are saying!</p>
+        {{ if . }}
+        <span>Username '{{ .UserAlreadyExists }}' already Exists</span><br>
+        {{ end }}
+        <form action="newUser" method="post">
+            <input type="text"
+                   placeholder="Enter username..."
+                   name="username"
+                   pattern="([a-zA-Z0-9]){3,255}"
+                   title="3-255 Alphanumeric characters"
+                   autocomplete="off"
+                   autofocus="true"
+                   required>
+            <input type="password"
+                   placeholder="Enter password..."
+                   name="password"
+                   pattern=".{8,255}"
+                   title="8-255 characters"
+                   autocomplete="off"
+                   required>
+            <input type="submit" value="Create User">
+        </form>
+        <br>
+    </body>
+</html>
