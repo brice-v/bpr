@@ -61,16 +61,23 @@ func (d *DB) GetPosts(user *models.User) []models.Post {
 	var posts []models.Post
 	usersToGetFrom := []string{user.Username}
 	var followings []models.Following
-	result := d.db.Find(&followings, user.Username)
+	result := d.db.Find(&followings, "username = ?", user.Username)
 	if result.RowsAffected != 0 {
 		for _, v := range followings {
 			usersToGetFrom = append(usersToGetFrom, v.Follower)
 		}
 	}
 
-	result = d.db.Find(&posts, usersToGetFrom)
+	result = d.db.Find(&posts, "author_username in (?)", usersToGetFrom)
 	if result.Error != nil {
 		log.Printf("Do we need to handle this error? %s", result.Error.Error())
 	}
 	return posts
+}
+
+func (d *DB) NewPost(p *models.Post) {
+	tx := d.db.Create(p)
+	if tx.Error != nil {
+		log.Printf("NewPost failed: %s", tx.Error.Error())
+	}
 }

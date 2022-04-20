@@ -31,3 +31,19 @@ func setCookie(c *fiber.Ctx, key, value string) {
 	cook.Expires = time.Now().Add(time.Hour)
 	c.Cookie(cook)
 }
+
+func validateUser(c *fiber.Ctx, expectedUsername string) bool {
+	currentUserAuthId := c.Cookies("authId")
+	currentUsername := c.Cookies("username")
+	log.Printf("currentUserAuthId = %s, currentUsername = %s, expectedUsername = %s",
+		currentUserAuthId, currentUsername, expectedUsername)
+	if expectedUsername != currentUsername {
+		return false
+	}
+	authId, ok := getCache(c).Get(currentUsername)
+	log.Printf("authId = %s, ok = %t", authId, ok)
+	if !ok {
+		return false
+	}
+	return authId == currentUserAuthId
+}

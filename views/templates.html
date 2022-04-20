@@ -6,13 +6,5 @@
 {{ end }}
 
 {{ define "renderPosts"}}
-<div>
-    {{ range .Posts }}
-      <div>
-        <a href="/user/{{ .AuthorUsername }}">{{ .AuthorUsername }}</a>
-        <span>{{ .Timestamp }}</span>
-        <h3>{{ .Post }}</h3>
-      </div>
-    {{ end }}
-  </div>
+
 {{ end }}

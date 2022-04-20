@@ -2,32 +2,38 @@ package db
 
 import (
 	"log"
-	"time"
-
-	"github.com/patrickmn/go-cache"
+	"sync"
 )
 
+// TODO: Should the cache just be a db model? because it seems like this is just not working
+// TODO: Then we can just check their authId matches, and if not force a new login to reset it
+
+// Cache basically needs the log.Printf() stuff to work so its probably a race condition I guess?
+// Which is why well probably just end up with it in the db
+// we can have a logout that clears cookies and clears out their record in the DB
 type Cache struct {
-	cc *cache.Cache
+	mutex sync.Mutex
+	m     map[string]string
 }
 
 func NewCache() *Cache {
-	return &Cache{cache.New(time.Hour, time.Hour*24)}
+	return &Cache{mutex: sync.Mutex{}, m: make(map[string]string)}
 }
 
 func (c *Cache) Set(k string, v string) {
-	c.cc.Set(k, v, cache.DefaultExpiration)
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+	log.Printf("k = %q, v = %q", k, v)
+	c.m[k] = v
 }
 
 func (c *Cache) Get(k string) (string, bool) {
-	v, ok := c.cc.Get(k)
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+	v, ok := c.m[k]
+	log.Printf("v = %q, ok = %t, k = %s", v, ok, k)
 	if !ok {
 		return "", false
 	}
-	str, ok := v.(string)
-	if !ok {
-		log.Printf("Found a non-string in cache `%#v`", v)
-		return "", false
-	}
-	return str, ok
+	return v, ok
 }

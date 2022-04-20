@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"bpr/models"
 	"fmt"
 	"log"
 	"net/url"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -12,22 +14,17 @@ import (
 
 func Index(c *fiber.Ctx) error {
 	unc := c.Cookies("username")
-	authIdC := c.Cookies("authId")
 	if unc != "" {
 		user, userFound := getDB(c).FindUser(unc)
 		if !userFound {
 			return c.Render("login", "")
 		}
-		cache := getCache(c)
-		authId, ok := cache.Get(unc)
-		if !ok {
-			return c.Render("login", "")
-		}
-		if authId != authIdC {
+		if !validateUser(c, unc) {
 			return c.Render("login", "")
 		}
 		// TODO: Render with all their messages
 		posts := getDB(c).GetPosts(user)
+		log.Printf("got to here, posts = %q", posts)
 		return c.Render("home", fiber.Map{
 			"Username": user.Username,
 			"Posts":    posts,
@@ -104,5 +101,14 @@ func User(c *fiber.Ctx) error {
 func NewPost(c *fiber.Ctx) error {
 	m := c.FormValue("message")
 	un := c.FormValue("username")
-	return c.SendString("Still need to handle un = `" + un + "`, m = `" + m + "`")
+	if !validateUser(c, un) {
+		return c.SendStatus(fiber.ErrBadRequest.Code)
+	}
+	post := &models.Post{
+		Message:        m,
+		Timestamp:      time.Now(),
+		AuthorUsername: un,
+	}
+	getDB(c).NewPost(post)
+	return c.Redirect("/")
 }
