@@ -5,7 +5,7 @@
         <h1>bpr sign up!</h1>
         <p>bpr is a platform where you can post messages on a timeline and follow what others are saying!</p>
         {{ if . }}
-        <span>Username '{{ .UserAlreadyExists }}' already Exists</span><br>
+        <span>{{ .Error }}</span><br>
         {{ end }}
         <form action="newUser" method="post">
             <input type="text"

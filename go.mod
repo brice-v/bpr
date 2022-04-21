@@ -6,7 +6,6 @@ require (
 	github.com/gofiber/fiber/v2 v2.32.0
 	github.com/gofiber/template v1.6.26
 	github.com/google/uuid v1.1.2
-	github.com/patrickmn/go-cache v2.1.0+incompatible
 	golang.org/x/crypto v0.0.0-20220214200702-86341886e292
 	gorm.io/driver/sqlite v1.3.1
 	gorm.io/gorm v1.23.4

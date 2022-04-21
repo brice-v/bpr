@@ -2,45 +2,23 @@
 <html>
     {{ template "header" }}
     <body>
-        <h1>{{ .Username }}'s Timeline</h1>
+        <h1><a href="/user/{{ .Username }}">{{ .Username }}'s</a> Timeline</h1>
         <p>Below are all the posts from you and people you follow!</p>
+        <p><a href="/all">Or you can check out ALL posts to find more people to follow!</a></p>
         <div>
-            <span>Post something!</span>
+            <p><span>Post something!</span><br></p>
             <form action="newPost" method="post">
                 <textarea name="message"
                 minlength="3"
                 maxlength="255"
                 autofocus="true"
                 style="resize: none;"
-                required>
-                </textarea>
+                required></textarea>
                 <input type="hidden" name="username" value="{{ .Username }}">
                 <input type="submit" value="Beep">
             </form>
         </div>
-        <!-- This is what I probably have to do to get it to work from templates.html
-                // Define a nested template called header
-                {{define "header"}}
-                    <h1>{{.}}</h1>
-                {{end}}
-
-                // Call template and pass a name parameter
-                {{range .Items}}
-                <div class="item">
-                    {{template "header" .Name}}
-                    <span class="price">${{.Price}}</span>
-                </div>
-                {{end}}
-        -->
-        <div>
-            {{ range .Posts }}
-            <div>
-              <a href="/user/{{ .AuthorUsername }}">{{ .AuthorUsername }}</a>
-              <span>{{ .Timestamp }}</span>
-              <h3>{{ .Message }}</h3>
-            </div>
-            {{ end }}
-          </div>
+        <div>{{ template "renderPosts" .Posts }}</div>
         <br>
     </body>
 </html>

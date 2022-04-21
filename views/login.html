@@ -5,8 +5,10 @@
         <h1>bpr login!</h1>
         <p>bpr is a platform where you can post messages on a timeline and follow what others are saying!</p>
         {{ if . }}
-        <span>Error: {{ .Error }}</span>
-        <br>
+        <p>
+            <span>Error: {{ .Error }}</span>
+            <br>
+        </p>
         {{ end }}
         <form action="login" method="post">
             <input type="text"

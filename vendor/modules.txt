@@ -8,10 +8,22 @@ github.com/gofiber/fiber/v2/internal/bytebufferpool
 github.com/gofiber/fiber/v2/internal/colorable
 github.com/gofiber/fiber/v2/internal/dictpool
 github.com/gofiber/fiber/v2/internal/fwd
+github.com/gofiber/fiber/v2/internal/go-ole
+github.com/gofiber/fiber/v2/internal/go-ole/oleutil
+github.com/gofiber/fiber/v2/internal/gopsutil/common
+github.com/gofiber/fiber/v2/internal/gopsutil/cpu
+github.com/gofiber/fiber/v2/internal/gopsutil/load
+github.com/gofiber/fiber/v2/internal/gopsutil/mem
+github.com/gofiber/fiber/v2/internal/gopsutil/net
+github.com/gofiber/fiber/v2/internal/gopsutil/process
 github.com/gofiber/fiber/v2/internal/isatty
+github.com/gofiber/fiber/v2/internal/memory
 github.com/gofiber/fiber/v2/internal/msgp
 github.com/gofiber/fiber/v2/internal/schema
 github.com/gofiber/fiber/v2/internal/uuid
+github.com/gofiber/fiber/v2/internal/wmi
+github.com/gofiber/fiber/v2/middleware/limiter
+github.com/gofiber/fiber/v2/middleware/monitor
 github.com/gofiber/fiber/v2/utils
 # github.com/gofiber/template v1.6.26
 ## explicit; go 1.15
@@ -34,9 +46,6 @@ github.com/klauspost/compress/zlib
 # github.com/mattn/go-sqlite3 v1.14.12
 ## explicit; go 1.12
 github.com/mattn/go-sqlite3
-# github.com/patrickmn/go-cache v2.1.0+incompatible
-## explicit
-github.com/patrickmn/go-cache
 # github.com/valyala/bytebufferpool v1.0.0
 ## explicit
 github.com/valyala/bytebufferpool

@@ -4,8 +4,11 @@ import (
 	"bpr/db"
 	"bpr/handlers"
 	"log"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
+	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/template/html"
 )
 
@@ -22,19 +25,35 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	cache := db.NewCache()
 	app.Use(func(c *fiber.Ctx) error {
 		c.Locals("db", dbc)
-		c.Locals("cache", cache)
 		return c.Next()
 	})
+	app.Use(limiter.New(limiter.Config{
+		Expiration: time.Second,
+	}))
 
+	setupRoutes(app)
+
+	app.Listen(":3000")
+}
+
+func setupRoutes(app *fiber.App) {
 	app.Get("/", handlers.Index)
 	app.Get("/signup", handlers.Signup)
 	app.Get("/user/:username", handlers.User)
+	app.Get("/monitor", monitor.New(monitor.Config{
+		Next: monitorNextHelper,
+	}))
+	app.Get("/all", handlers.All)
+
 	app.Post("/newUser", handlers.NewUser)
 	app.Post("/login", handlers.Login)
 	app.Post("/newPost", handlers.NewPost)
+	app.Post("/logout", handlers.Logout)
+	app.Post("/follow", handlers.Follow)
+}
 
-	app.Listen(":3000")
+func monitorNextHelper(c *fiber.Ctx) bool {
+	return !handlers.ValidateUser(c, "brice")
 }
