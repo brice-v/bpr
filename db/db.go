@@ -76,7 +76,7 @@ func (d *DB) GetPosts(user *models.User) []models.Post {
 		}
 	}
 
-	result = d.db.Find(&posts, "username in (?)", usersToGetFrom)
+	result = d.db.Order("id desc").Find(&posts, "username in (?)", usersToGetFrom)
 	if result.Error != nil {
 		log.Printf("Do we need to handle this error? %s", result.Error.Error())
 	}
@@ -85,7 +85,7 @@ func (d *DB) GetPosts(user *models.User) []models.Post {
 
 func (d *DB) GetSingleUsersPosts(user *models.User) []models.Post {
 	var posts []models.Post
-	result := d.db.Find(&posts, "username = ?", user.Username)
+	result := d.db.Order("id desc").Find(&posts, "username = ?", user.Username)
 	if result.Error != nil {
 		log.Printf("Handle this maybe? = %s", result.Error.Error())
 	}
@@ -94,7 +94,7 @@ func (d *DB) GetSingleUsersPosts(user *models.User) []models.Post {
 
 func (d *DB) GetAllPosts() []models.Post {
 	var posts []models.Post
-	d.db.Find(&posts)
+	d.db.Order("id desc").Find(&posts)
 	return posts
 }
 

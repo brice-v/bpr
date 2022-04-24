@@ -15,22 +15,22 @@ func Index(c *fiber.Ctx) error {
 	if unc != "" {
 		user, userFound := getDB(c).FindUser(unc)
 		if !userFound {
-			return c.Render("login", "")
+			return c.Render("views/login", "")
 		}
 		if !ValidateUser(c, unc) {
-			return c.Render("login", "")
+			return c.Render("views/login", "")
 		}
 		posts := getDB(c).GetPosts(user)
-		return c.Render("home", fiber.Map{
+		return c.Render("views/home", fiber.Map{
 			"Username": user.Username,
 			"Posts":    posts,
 		})
 	}
-	return c.Render("login", "")
+	return c.Render("views/login", "")
 }
 
 func Signup(c *fiber.Ctx) error {
-	return c.Render("signup", "")
+	return c.Render("views/signup", "")
 }
 
 func NewUser(c *fiber.Ctx) error {
@@ -39,7 +39,7 @@ func NewUser(c *fiber.Ctx) error {
 	dbc := getDB(c)
 	if _, ok := dbc.FindUser(un); ok {
 		errorString := fmt.Sprintf("Username '%s' already exists!", un)
-		return c.Render("signup", fiber.Map{
+		return c.Render("views/signup", fiber.Map{
 			"Error": errorString,
 		})
 	}
@@ -59,14 +59,14 @@ func Login(c *fiber.Ctx) error {
 	pw := c.FormValue("password")
 	user, ok := getDB(c).FindUser(un)
 	if !ok {
-		return c.Render("login", fiber.Map{
+		return c.Render("views/login", fiber.Map{
 			"Error": "User Not Found!",
 		})
 	}
 
 	// Comparing the password with the hash
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pw)); err != nil {
-		return c.Render("login", fiber.Map{
+		return c.Render("views/login", fiber.Map{
 			"Error": "Invalid Credentials!",
 		})
 	}
@@ -90,7 +90,7 @@ func User(c *fiber.Ctx) error {
 		return c.SendString("User '" + un + "' not found!")
 	}
 	posts := dbc.GetSingleUsersPosts(user)
-	return c.Render("user", fiber.Map{
+	return c.Render("views/user", fiber.Map{
 		"Username":           un,
 		"IsUsernameLoggedIn": un == currentUn,
 		"FollowerUsername":   currentUn,
@@ -130,7 +130,7 @@ func Follow(c *fiber.Ctx) error {
 
 func All(c *fiber.Ctx) error {
 	posts := getDB(c).GetAllPosts()
-	return c.Render("all", fiber.Map{
+	return c.Render("views/all", fiber.Map{
 		"Posts": posts,
 	})
 }
